@@ -1,15 +1,19 @@
 var gulp = require('gulp'),
     browserSync = require('browser-sync').create(),
-        plumber = require('gulp-plumber');
+        plumber = require('gulp-plumber'),
+    runSequence = require('run-sequence');
 
 gulp.task('server', function (){
     browserSync.init({
-        port: 3000
+        port: 3000,
+        server: {
+            baseDir: './'
+        }
     });
 });
 gulp.task('watch', function () {
     gulp.watch([
-        '/*.html',
+        'index.html',
         'js/*.js',
         'css/*.css'
     ]).on('change', browserSync.reload);
