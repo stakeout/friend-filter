@@ -20,9 +20,9 @@
 				<span class="close-btn"><i class="fa fa-times"></i></span>
 			</header>
 			<div class="input-filter">
-				<label class="search"><input type="text" class="filter" placeholder="Начните вводить имя друга">
+				<label class="search"><input type="text" class="all-filter" placeholder="Начните вводить имя друга">
 				</label>
-				<input type="text" class="filter" placeholder="Название"></div>
+				<input type="text" class="dnd-filter" placeholder="Название"></div>
 			<div class="wrapper">
 			<section class="all-friends">
 				<h2 class="friends">Ваши друзья</h2>
@@ -30,6 +30,7 @@
 			</section>
 			<section class="list-friends">
 				<h2 class="friends">Друзья в списке</h2>
+				<ul class="drop-target"></ul>
 			</section>
 			</div>
 			<footer>
@@ -39,7 +40,7 @@
 	</div>
 <script type="text/x-handlebars-template" id="friendsItemTemplate">
         {{#each list}}
-        <li class="friend-list__item">
+        <li class="friend-list__item" draggable="true">
             	<img src="{{./photo_50}}" alt="">
             <span class="name">{{./first_name}} {{./last_name}}</span>
             <span class="add"><i class="fa fa-plus"></i></span>

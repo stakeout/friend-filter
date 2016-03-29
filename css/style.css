@@ -134,6 +134,12 @@ h2.friends{
 .friend-list__item:hover{
 	background-color: #f0f0f0;
 }
+.opacity{
+	opacity: 0.5;
+}
+.dash{
+	border: 2px dashed #000;
+}
 footer{
 	display: -webkit-flex;
 	display: -moz-flex;
