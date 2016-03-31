@@ -62,10 +62,10 @@ header h2{
 	border-radius: 50px;
 	border: none;
 }
-.search{
+.left-search{
 	position: relative;
 }
-.search:before{
+.left-search:before{
 	position: absolute;
 	content: '\f002';
 	left: 5px;
@@ -100,11 +100,14 @@ h2.friends{
 	font-weight: 500;
 	border-bottom: 1px solid #f0f0f0;
 }
-.friend-list{
+.friend-list-all,
+.friend-list-filtered{
 	width: calc(263px + 16px);
 	height: 340px;
 	overflow-y: auto;
-
+}
+.friend-list-filtered .add{
+		transform: rotate(45deg);
 }
 .friend-list__item{
 	display: -webkit-flex;
@@ -130,6 +133,9 @@ h2.friends{
 	font-family: fontawesome;
 	font-size: 16px;
 	color: #c4c4c4;
+}
+.rotate{
+	transform: rotate(45deg);
 }
 .friend-list__item:hover{
 	background-color: #f0f0f0;

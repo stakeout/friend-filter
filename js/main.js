@@ -1,3 +1,4 @@
+
 new Promise(function(resolve) {
     if (document.readyState === 'complete') {
         resolve();
@@ -24,90 +25,52 @@ new Promise(function(resolve) {
                 reject(new Error(response.error.error_msg));
             } else {
                 var allFriendsList = [];
+                var friendList = document.querySelector('.friend-list-all');
                 allFriendsList = response.response;
 
                 var source = friendsItemTemplate.innerHTML,
                     templateFn = Handlebars.compile(source),
                     template = templateFn({ list: allFriendsList });
-                friendList.innerHTML = template;
-
-                var allListSearch = document.querySelector('.all-filter');
-                var dropListsearch = document.querySelector('.dnd-filter');
-
-                    allListSearch.addEventListener("input", function(e) {
-                    var search = allListSearch.value.toLowerCase();
-
-                    var seachFriends = allFriendsList.filter(function(value) {
-                        var firstName = value.first_name;
-                        var lastName = value.last_name;
-
-                        return firstName.toLowerCase().indexOf(search) >=0 || lastName.toLowerCase().indexOf(search)>=0;
-
-                    });
-
-                    if (seachFriends.length) {
-                        template = templateFn({ list: seachFriends });
-                        friendList.innerHTML = template;
-                    }
-                });
-
-                resolve();
+                    friendList.innerHTML = template;
             }
-        });
-    });
-}).then(function() {
-    return new Promise(function(resolve, reject) {
-        var dragSrcEl = null;
-        var dropTarget = document.querySelector('.drop-target');
-        function handleDragStart(e) {
-            this.classList.add('opacity'); // this / e.target is the source node.
-            dragSrcEl = this;
+            var dragZone = document.querySelector('.wrapper');
+            var addedFriends   =  document.querySelector('.friend-list-filtered');
+            var addItem = document.querySelectorAll('.add');
+            var item;
 
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.innerHTML);
-        }
-
-        function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault(); // Necessary. Allows us to drop.
-            }
-            e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object.
-            return false;
-        }
-
-        function handleDrop(e) {
-            // this / e.target is current target element.
-
-            if (e.stopPropagation) {
-                e.stopPropagation(); // Stops some browsers from redirecting.
-            }
-
-            // Don't do anything if dropping the same column we're dragging.
-            if (dragSrcEl != this) {
-                // Set the source column's HTML to the HTML of the columnwe dropped on.
-                dragSrcEl.innerHTML = this.innerHTML;
-                this.innerHTML = e.dataTransfer.getData('text/html');
-            }
-
-        }
-
-        function handleDragEnd(e) {
-            // this/e.target is the source node.
-
-            [].forEach.call(cols, function(col) {
-                col.classList.remove('opacity');
+            dragZone.addEventListener("dragstart", function(e) {
+                item = e.target;
             });
-        }
+            dragZone.addEventListener("dragover", function(e) {
+                e.preventDefault();
+            });
 
-        var cols = document.querySelectorAll('.friend-list__item');
-        [].forEach.call(cols, function(col) {
-            col.addEventListener('dragstart', handleDragStart, false);
-            col.addEventListener('dragover', handleDragOver, false);
-            col.addEventListener('drop', handleDrop, false);
-            col.addEventListener('dragend', handleDragEnd, false);
+            dragZone.addEventListener( 'drop', moveFriend, true );
+            dragZone.addEventListener('click', toggleMove, true);
+            function moveFriend(e) {
+                if(e.target === addedFriends || e.target.closest('.friend-list-filtered') && item.parentNode !== addedFriends ) {
+                        addedFriends.appendChild(item);
+                    
+                } 
+                else if ( e.target === friendList || e.target.closest('.friend-list-all') && item.parentNode !== friendList ){ 
+                        friendList.appendChild(item);
+
+                }
+            }
+            function toggleMove(e){
+                e.stopPropagation();
+                if(e.target.closest('ul.friend-list-all')) {
+                    addedFriends.appendChild(e.target.closest('li.friend-list__item'));
+                }
+                else if(e.target.closest('ul.friend-list-filtered')) {
+                    friendList.appendChild(e.target.closest('li.friend-list__item'));
+                }
+            } 
+            resolve();
+
         });
-
     });
 }).catch(function(e) {
     alert('Ошибка: ' + e.message);
 });
+

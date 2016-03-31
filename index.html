@@ -1,52 +1,65 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300,500&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://fonts.googleapis.com/css?family=Fira+Sans:400,300,500&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
-	<script src= "http://vk.com/js/api/openapi.js" type= "text/javascript" ></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/style.css">
-	<!--endbuild-->
-	<title>Фильтр друзей</title>
+    <script src="http://vk.com/js/api/openapi.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!--endbuild-->
+    <title>Фильтр друзей</title>
+
+	<script>
+	function myFunction(event) { 
+	    alert(event.target.nodeName);
+	}
+	</script>
 </head>
+
 <body>
-	<div class="container">
-		<article class="filter-wrapper">
-			<header>
-				<h2>Выберите друзей</h2>
-				<span class="close-btn"><i class="fa fa-times"></i></span>
-			</header>
-			<div class="input-filter">
-				<label class="search"><input type="text" class="all-filter" placeholder="Начните вводить имя друга">
-				</label>
-				<input type="text" class="dnd-filter" placeholder="Название"></div>
-			<div class="wrapper">
-			<section class="all-friends">
-				<h2 class="friends">Ваши друзья</h2>
-				<ul class="friend-list" id="friendList"></ul>
-			</section>
-			<section class="list-friends">
-				<h2 class="friends">Друзья в списке</h2>
-				<ul class="drop-target"></ul>
-			</section>
-			</div>
-			<footer>
-				<button type="submit">Сохранить</button>
-			</footer>
-		</article>
-	</div>
-<script type="text/x-handlebars-template" id="friendsItemTemplate">
+    <div class="container">
+        <article class="filter-wrapper">
+            <header>
+                <h2>Выберите друзей</h2>
+                <span class="close-btn"><i class="fa fa-times"></i></span>
+            </header>
+            <div class="input-filter">
+                <label class="left-search">
+                    <input type="text" placeholder="Начните вводить имя друга">
+                </label>
+                <label class="right-search"></label><input type="text" placeholder="Название">
+            </div>
+            <div class="wrapper">
+                <section class="all-friends">
+                    <h2 class="friends">Ваши друзья</h2>
+                    <ul class="friend-list-all"></ul>
+                </section>
+                <section class="list-friends">
+                    <h2 class="friends">Друзья в списке</h2>
+                    <ul class="friend-list-filtered"></ul>
+                </section>
+            </div>
+            <footer>
+                <button type="submit">Сохранить</button>
+            </footer>
+        </article>
+    </div>
+    <script type="text/x-handlebars-template" id="friendsItemTemplate">
         {{#each list}}
-        <li class="friend-list__item" draggable="true">
-            	<img src="{{./photo_50}}" alt="">
+        <li class="friend-list__item" draggable="true" data-id="{{user_id}}">
+            <img src="{{./photo_50}}" alt="">
             <span class="name">{{./first_name}} {{./last_name}}</span>
-            <span class="add"><i class="fa fa-plus"></i></span>
+            <span class="add"><i class="fa fa-plus toggle"></i></span>
         </li>
         {{/each}}
-</script>
-	<script src="js/main.js"></script>
+    </script>
+    <script src="js/main.js"></script>
+
+<script src="search"></script>
 </body>
+
 </html>
