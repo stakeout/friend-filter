@@ -12,12 +12,11 @@
     <link rel="stylesheet" href="css/style.css">
     <!--endbuild-->
     <title>Фильтр друзей</title>
-
-	<script>
-	function myFunction(event) { 
-	    alert(event.target.nodeName);
-	}
-	</script>
+    <script>
+    function myFunction(event) {
+        alert(event.target.nodeName);
+    }
+    </script>
 </head>
 
 <body>
@@ -29,9 +28,11 @@
             </header>
             <div class="input-filter">
                 <label class="left-search">
-                    <input type="text" placeholder="Начните вводить имя друга">
+                    <input type="text" id="leftSearch" placeholder="Начните вводить имя друга">
                 </label>
-                <label class="right-search"></label><input type="text" placeholder="Название">
+                <label class="right-search">
+                    <input type="text" id="rightSearch" placeholder="Название">
+                </label>
             </div>
             <div class="wrapper">
                 <section class="all-friends">
@@ -51,15 +52,13 @@
     <script type="text/x-handlebars-template" id="friendsItemTemplate">
         {{#each list}}
         <li class="friend-list__item" draggable="true" data-id="{{user_id}}">
-            <img src="{{./photo_50}}" alt="">
+            <img draggable="false" src="{{./photo_50}}" alt="">
             <span class="name">{{./first_name}} {{./last_name}}</span>
             <span class="add"><i class="fa fa-plus toggle"></i></span>
         </li>
         {{/each}}
     </script>
     <script src="js/main.js"></script>
-
-<script src="search"></script>
 </body>
 
 </html>

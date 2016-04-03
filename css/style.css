@@ -121,7 +121,7 @@ h2.friends{
 		border-bottom: 1px solid #f0f0f0;
 	cursor: move;
 }
-.friend-list__item > img{
+.friend-list__item img{
 	border-radius: 50%;
 	margin-right: 10px;	
 }
