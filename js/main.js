@@ -38,7 +38,7 @@ new Promise(function(resolve) {
                 });
 
                 renderingFriendList();
-            
+
             }
 
             dragZone.addEventListener("dragstart", function(e) {
@@ -82,28 +82,28 @@ new Promise(function(resolve) {
 
             }
 
-            function renderingFriendList() {
+            function renderingFriendList() { //функция рендера списка друзей 
                 var source = friendsItemTemplate.innerHTML;
                 var templateFn = Handlebars.compile(source);
                 var friendListTemplate = templateFn({
                     list: friendObj.filter(function(value) {
-                        return value.flag === false;
+                        return value.flag === false; //левой колонке флаг false
                     })
                 });
                 friendList.innerHTML = friendListTemplate;
 
                 var flagFriendsListTemplate = templateFn({
                     list: friendObj.filter(function(value) {
-                        return value.flag === true;
+                        return value.flag === true; //для фильтрованных элементов true
                     })
                 });
                 flagFriendsList.innerHTML = flagFriendsListTemplate;
-                 updateEvents();
+                console.log(flagFriendsListTemplate);
+                updateEvents(); //апдейтим листенеры после!!! рендера объекта списка друзей
             }
 
-            function updateEvents(){
-                 var addItem = document.querySelectorAll('.toggle');
-                //move element by click
+            function updateEvents() {
+                var addItem = document.querySelectorAll('.toggle');
                 for (var i = 0; i < addItem.length; i++) {
                     addItem[i].addEventListener('click', toggleMove);
                 }
@@ -159,14 +159,14 @@ new Promise(function(resolve) {
                  updateEvents(); 
             }*/
 
-            function search(e){
+            function search(e) {
                 var inputId = e.target.getAttribute("id");
                 var input = e.target;
                 var isFlag, friendsListOutput;
-                if (inputId == "rightSearch"){
+                if (inputId == "rightSearch") {
                     isFlag = true;
                     friendsListOutput = document.querySelector('.friend-list-filtered');
-                } else if (inputId == "leftSearch"){
+                } else if (inputId == "leftSearch") {
                     isFlag = false;
                     friendsListOutput = document.querySelector('.friend-list-all');
                 }
@@ -186,9 +186,23 @@ new Promise(function(resolve) {
                 } else {
                     friendsListOutput.innerHTML = "";
                 }
-                 updateEvents(); 
+                updateEvents();
+            }
+            //localstorage
+            saveToLocalStorage.addEventListener('click', saveFriends);
+            if (localStorage.getItem('savedFriendsList')) {
+                flagFriendsList.innerHTML = localStorage.getItem('savedFriendsList');
             }
 
+            //save to local storage
+            function saveFriends(e) {
+                e.preventDefault();
+
+                var flagFriendsList = document.querySelector('.friend-list-filtered');
+
+                localStorage.setItem('savedFriendsList', flagFriendsList.innerHTML);
+                console.log('saved');
+            }
 
             resolve();
 
