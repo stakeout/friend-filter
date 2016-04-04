@@ -181,6 +181,9 @@ button[type="reset"]{
 	border-radius: 10px;
 	cursor: pointer;
 }
+button:hover{
+	background-color: #ffa48a;
+}
 
 input::-webkit-input-placeholder {
 	color: #a5a5a5;
