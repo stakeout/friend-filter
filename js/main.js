@@ -187,3 +187,4 @@ function addVk(e) {
         alert('Ошибка: ' + e.message);
     });
 }
+//удаление ветки пр-pages, experiment
