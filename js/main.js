@@ -174,7 +174,7 @@ function addVk(e) {
                     e.preventDefault();
                     var value = localStorage.getItem('savedFriendsObject');
                     if (value.length) {
-                        localStorage.clear('savedFriendsObject');
+                        localStorage.removeItem('savedFriendsObject');
                     }
                 }
                 resolve();
@@ -187,4 +187,3 @@ function addVk(e) {
         alert('Ошибка: ' + e.message);
     });
 }
-//удаление ветки пр-pages, experiment
