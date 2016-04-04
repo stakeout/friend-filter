@@ -167,7 +167,21 @@ button[type="submit"]{
 	font-size: 12px;
 	font-weight: 300;
 	border-radius: 10px;
+	cursor: pointer;
 }
+
+button[type="reset"]{
+		border: none;
+		margin-left: 20px;
+	padding: 8px 15px;
+	background-color: #ff8663;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 300;
+	border-radius: 10px;
+	cursor: pointer;
+}
+
 input::-webkit-input-placeholder {
 	color: #a5a5a5;
 	font-weight: 300;

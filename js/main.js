@@ -23,19 +23,24 @@ new Promise(function(resolve) {
         var friendList = document.querySelector('.friend-list-all');
         var flagFriendsList = document.querySelector('.friend-list-filtered');
         var dragZone = document.querySelector('.wrapper');
-        var addedFriends = document.querySelector('.friend-list-filtered');
-        var item, friendObj;
+        var item, friendObj = [];
 
         VK.api('friends.get', { 'fields': 'photo_50, first_name, last_name' }, function(response) {
             if (response.error) {
                 reject(new Error(response.error.error_msg));
-            } else {
-                var allFriendsList = response.response;
-                var friend = JSON.stringify(allFriendsList);
-                friendObj = JSON.parse(friend);
-                friendObj.forEach(function(elem, i, arr) {
-                    elem.flag = false;
-                });
+            } else { //проверяем есть ли данные в localstorage
+                if (localStorage.getItem('savedFriendsObject')) {
+                    friendObj = JSON.parse(localStorage.getItem('savedFriendsObject'));
+
+                }
+                if (friendObj.length === 0) { //если localstorage пуст, работаем с данными из vk
+                    var allFriendsList = response.response;
+                    var friend = JSON.stringify(allFriendsList);
+                    friendObj = JSON.parse(friend);
+                    friendObj.forEach(function(elem, i, arr) {
+                        elem.flag = false;
+                    });
+                }
 
                 renderingFriendList();
 
@@ -55,7 +60,7 @@ new Promise(function(resolve) {
                 var user = friendObj.filter(function(value) {
                     return value.user_id == userId;
                 })[0];
-                if (e.target.closest('.friend-list-filtered') && item.parentNode !== addedFriends) {
+                if (e.target.closest('.friend-list-filtered') && item.parentNode !== flagFriendsList) {
                     user.flag = true;
 
                 } else if (e.target.closest('.friend-list-all') && item.parentNode !== friendList) {
@@ -98,7 +103,6 @@ new Promise(function(resolve) {
                     })
                 });
                 flagFriendsList.innerHTML = flagFriendsListTemplate;
-                console.log(flagFriendsListTemplate);
                 updateEvents(); //апдейтим листенеры после!!! рендера объекта списка друзей
             }
 
@@ -190,18 +194,24 @@ new Promise(function(resolve) {
             }
             //localstorage
             saveToLocalStorage.addEventListener('click', saveFriends);
-            if (localStorage.getItem('savedFriendsList')) {
-                flagFriendsList.innerHTML = localStorage.getItem('savedFriendsList');
-            }
+            clearLocalStorage.addEventListener('click', clearLocalStorage);
+
 
             //save to local storage
             function saveFriends(e) {
                 e.preventDefault();
 
-                var flagFriendsList = document.querySelector('.friend-list-filtered');
-
-                localStorage.setItem('savedFriendsList', flagFriendsList.innerHTML);
+                localStorage.setItem('savedFriendsObject', JSON.stringify(friendObj));
                 console.log('saved');
+            }
+
+            function clearLocalStorage(e) {
+                e.preventDefault();
+                var value = localStorage.getItem('savedFriendsObject');
+                if (value.length) {
+                    localStorage.clear('savedFriendsObject');
+                    console.log('done!');
+                }
             }
 
             resolve();
