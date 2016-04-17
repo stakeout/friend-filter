@@ -26,26 +26,41 @@ function addVk(e) {
             var friendList = document.querySelector('.friend-list-all');
             var flagFriendsList = document.querySelector('.friend-list-filtered');
             var dragZone = document.querySelector('.wrapper');
-            var item, friendObj = [];
+            var item, friendsFromVk = [], friendsFromStorage = [];
 
             VK.api('friends.get', { 'fields': 'photo_50, first_name, last_name' }, function(response) {
                 if (response.error) {
                     reject(new Error(response.error.error_msg));
                 } else { //проверяем есть ли данные в localstorage
-                    if (localStorage.getItem('savedFriendsObject')) {
-                        friendObj = JSON.parse(localStorage.getItem('savedFriendsObject'));
+                    var allFriendsList = response.response;
+                    var friend = JSON.stringify(allFriendsList);
+                    friendsFromVk = JSON.parse(friend);
+                    friendsFromVk.forEach(function(elem, i, arr) {
+                        elem.flag = false;
+                    });
 
+
+                    if (localStorage.getItem('savedFriendsObject')) {
+                        friendsFromStorage = JSON.parse(localStorage.getItem('savedFriendsObject'));
                     }
-                    if (friendObj.length === 0) { //если localstorage пуст, работаем с данными из vk
-                        var allFriendsList = response.response;
-                        var friend = JSON.stringify(allFriendsList);
-                        friendObj = JSON.parse(friend);
-                        friendObj.forEach(function(elem, i, arr) {
-                            elem.flag = false;
-                        });
+                    if (friendsFromStorage.length) {
+
+                        for (var i = 0;i<friendsFromStorage.length;i++){
+
+                            var selectedFriend = friendsFromVk.filter(function(value){
+                                return value.uid === friendsFromStorage[i].uid;
+                            });
+
+                            if (selectedFriend.length){
+                                selectedFriend[0].flag = true;
+                            }
+
+                        }
+
                     }
 
                     renderingFriendList();
+
 
                 }
 
@@ -60,7 +75,7 @@ function addVk(e) {
                 //drag and drop
                 function moveFriend(e) {
                     var userId = parseInt(item.getAttribute("data-id"));
-                    var user = friendObj.filter(function(value) {
+                    var user = friendsFromVk.filter(function(value) {
                         return value.user_id == userId;
                     })[0];
                     if (e.target.closest('.friend-list-filtered') && item.parentNode !== flagFriendsList) {
@@ -77,7 +92,7 @@ function addVk(e) {
                 function toggleMove(e) {
                     var currentItem = e.target.closest('li.friend-list__item');
                     var userId = parseInt(currentItem.getAttribute("data-id"));
-                    var user = friendObj.filter(function(value) {
+                    var user = friendsFromVk.filter(function(value) {
                         return value.user_id == userId;
                     })[0];
                     if (e.target.closest('ul.friend-list-all')) {
@@ -94,20 +109,21 @@ function addVk(e) {
                     var source = friendsItemTemplate.innerHTML;
                     var templateFn = Handlebars.compile(source);
                     var friendListTemplate = templateFn({
-                        list: friendObj.filter(function(value) {
+                        list: friendsFromVk.filter(function(value) {
                             return value.flag === false; //левой колонке флаг false
                         })
                     });
                     friendList.innerHTML = friendListTemplate;
 
                     var flagFriendsListTemplate = templateFn({
-                        list: friendObj.filter(function(value) {
+                        list: friendsFromVk.filter(function(value) {
                             return value.flag === true; //для фильтрованных элементов true
                         })
                     });
                     flagFriendsList.innerHTML = flagFriendsListTemplate;
                     updateEvents(); //апдейтим листенеры после!!! рендера объекта списка друзей
                 }
+
 
                 function updateEvents() {
                     var addItem = document.querySelectorAll('.toggle');
@@ -143,10 +159,9 @@ function addVk(e) {
                     var source = friendsItemTemplate.innerHTML;
                     var templateFn = Handlebars.compile(source);
                     var search = input.value.toLowerCase();
-                    var seachFriends = friendObj.filter(function(value) {
-                        var firstName = value.first_name;
-                        var lastName = value.last_name;
-                        return value.flag === isFlag && (firstName.toLowerCase().indexOf(search) === 0 || lastName.toLowerCase().indexOf(search) === 0);
+                    var seachFriends = friendsFromVk.filter(function(value) {
+                        var fullName = value.first_name + ' ' + value.last_name ;
+                        return value.flag === isFlag && (fullName.toLowerCase().indexOf(search) >= 0);
                     });
 
                     if (seachFriends.length > 0) {
@@ -166,8 +181,11 @@ function addVk(e) {
                 //save to local storage
                 function saveFriends(e) {
                     e.preventDefault();
+                    var selectedFriends = friendsFromVk.filter(function(value) {
+                        return value.flag === true;
+                    });
 
-                    localStorage.setItem('savedFriendsObject', JSON.stringify(friendObj));
+                    localStorage.setItem('savedFriendsObject', JSON.stringify(selectedFriends));
                 }
 
                 function LocalStorageClear(e) {
@@ -187,3 +205,22 @@ function addVk(e) {
         alert('Ошибка: ' + e.message);
     });
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
